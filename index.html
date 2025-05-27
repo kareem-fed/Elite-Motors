@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Motors | Luxury Automotive Excellence</title>
+  <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSpb0pvu_5gYR2auNhwZQ3paSIgGBSdUvoZg&s" type="image/x-icon">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0F172A',
+            secondary: '#1E293B',
+            accent: '#F59E0B',
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Animate.css CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- React CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <style>
+    
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #ffa600 #eee;
+    }
+
+    body {
+      height: 200vh; 
+    }
+
+    ::-webkit-scrollbar {
+      width: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #eee;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #ffa600;
+      border-radius: 6px;
+    }
+    .hero-section {
+      background: 
+                  url('https://a-static.besthdwallpaper.com/yellow-mercedes-looks-good-in-the-dark-area-wallpaper-2800x2100-108563_28.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .car-card:hover .car-image {
+      transform: scale(1.05);
+    }
+    .brand-logo:hover {
+      filter: brightness(0) invert(1);
+      transform: scale(1.1);
+    }
+    .testimonial-card:hover {
+      transform: translateY(-10px);
+    }
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+<body class="scr bg-gray-100 font-sans">
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function App() {
+      const [currentSlide, setCurrentSlide] = useState(0);
+      const [isMenuOpen, setIsMenuOpen] = useState(false);
+      const [scrollPosition, setScrollPosition] = useState(0);
+      const [activeTab, setActiveTab] = useState('all');
+      
+      const cars = [
+        {
+          id: 1,
+          name: "Rolls Royce Ghost",
+          price: "$320,000",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbtmik8hDb7OcmtQuVJVoSP3XGg5H4ZsDTsQ&s",
+          description: "The Rolls Royce Ghost embodies British luxury in its finest form.",
+          category: "sedan",
+          year: 2023,
+          mileage: "500",
+          horsepower: "563 HP"
+        },
+        {
+          id: 2,
+          name: "Bentley Flying Spur",
+          price: "$280,000",
+          image: "https://stimg.cardekho.com/images/carexteriorimages/930x620/Bentley/Flying-Spur/11205/1695731100809/front-left-side-47.jpg",
+          description: "Power and elegance in one design with the Bentley Flying Spur.",
+          category: "sedan",
+          year: 2022,
+          mileage: "1200",
+          horsepower: "626 HP"
+        },
+        {
+          id: 3,
+          name: "Mercedes Maybach S-Class",
+          price: "$250,000",
+          image: "https://www.carbodydesign.com/media/2020/11/Mercedes-Maybach-S-Class-02-720x540.jpg",
+          description: "German luxury in its most magnificent form with Mercedes Maybach.",
+          category: "sedan",
+          year: 2023,
+          mileage: "800",
+          horsepower: "496 HP"
+        },
+        {
+          id: 4,
+          name: "Lamborghini Urus",
+          price: "$350,000",
+          image: "https://www.topgear.com/sites/default/files/2024/10/1-Lamborghini-Urus-SE-review-2024.jpg",
+          description: "The super SUV that redefines performance and luxury.",
+          category: "suv",
+          year: 2023,
+          mileage: "1500",
+          horsepower: "641 HP"
+        },
+        {
+          id: 5,
+          name: "Ferrari 812 Superfast",
+          price: "$400,000",
+          image: "https://images.pistonheads.com/nimg/48119/blobid0.jpg",
+          description: "The ultimate front-engined V12 Ferrari.",
+          category: "sports",
+          year: 2022,
+          mileage: "3000",
+          horsepower: "789 HP"
+        },
+        {
+          id: 6,
+          name: "Porsche 911 Turbo S",
+          price: "$275,000",
+          image: "https://www.topgear.com/sites/default/files/2022/03/ROW08514.jpg",
+          description: "Precision engineering meets breathtaking performance.",
+          category: "sports",
+          year: 2023,
+          mileage: "2000",
+          horsepower: "640 HP"
+        }
+      ];
+      
+      const brands = [
+        { name: "Mercedes", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2560px-Mercedes-Logo.svg.png" },
+        { name: "BMW", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/2048px-BMW.svg.png" },
+        { name: "Audi", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Audi-Logo_2016.svg/2560px-Audi-Logo_2016.svg.png" },
+        { name: "Porsche", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzPwyC_Y-pKQiSazh2WehpMS-vEsRUMFMwwg&s"},
+        { name: "Bentley", logo: "https://logowik.com/content/uploads/images/706_bentley.jpg" },
+        { name: "Rolls Royce", logo: "data:image/png;base64,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" }
+      ];
+      
+      const testimonials = [
+        {
+          name: "Michael Johnson",
+          role: "CEO, Tech Innovations",
+          comment: "Elite Motors provided exceptional service from start to finish. My new Maybach exceeds all expectations.",
+          image: "https://randomuser.me/api/portraits/men/32.jpg"
+        },
+        {
+          name: "Ali Ahmed",
+          role: "Entrepreneur",
+          comment: "The attention to detail in both their vehicles and customer service is unparalleled. Highly recommended!",
+          image: "https://randomuser.me/api/portraits/men/44.jpg"
+        },
+        {
+          name: "David Chen",
+          role: "Investment Banker",
+          comment: "I've purchased three luxury vehicles through Elite Motors. Each experience has been flawless.",
+          image: "https://randomuser.me/api/portraits/men/75.jpg"
+        }
+      ];
+      
+      const services = [
+        { 
+          icon: "fa-car",
+          title: "Luxury Vehicle Sales",
+          description: "Exclusive access to the world's finest automobiles"
+        },
+        { 
+          icon: "fa-sync-alt",
+          title: "Trade-In Services",
+          description: "Get top value for your current luxury vehicle"
+        },
+        { 
+          icon: "fa-shield-alt",
+          title: "Extended Warranties",
+          description: "Comprehensive protection plans for peace of mind"
+        },
+        { 
+          icon: "fa-cogs",
+          title: "Performance Upgrades",
+          description: "Custom enhancements to elevate your driving experience"
+        },
+        { 
+          icon: "fa-key",
+          title: "Concierge Delivery",
+          description: "White-glove delivery service anywhere in the world"
+        },
+        { 
+          icon: "fa-calendar-alt",
+          title: "Exclusive Events",
+          description: "VIP access to automotive shows and private viewings"
+        }
+      ];
+      
+      const news = [
+        {
+          title: "The Future of Luxury Mobility",
+          date: "June 15, 2023",
+          excerpt: "Exploring how electrification is transforming the high-end automotive market.",
+          image: "data:image/jpeg;base64,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"
+        },
+        {
+          title: "2023 Luxury SUV Comparison",
+          date: "May 28, 2023",
+          excerpt: "We test drive the top luxury SUVs to help you find your perfect match.",
+          image: "https://imgd.aeplcdn.com/600x337/n/cw/ec/131825/be-6e-exterior-right-front-three-quarter-5.jpeg?isig=0&q=80"
+        },
+        {
+          title: "Collector's Edition Supercars",
+          date: "April 12, 2023",
+          excerpt: "Limited production models that are destined to become future classics.",
+          image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+        }
+      ];
+      
+      const filteredCars = activeTab === 'all' 
+        ? cars 
+        : cars.filter(car => car.category === activeTab);
+      
+      useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrentSlide((prev) => (prev === cars.length - 1 ? 0 : prev + 1));
+        }, 5000);
+        
+        const handleScroll = () => {
+          setScrollPosition(window.pageYOffset);
+        };
+        
+        window.addEventListener('scroll', handleScroll);
+        
+        return () => {
+          clearInterval(interval);
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, []);
+      
+      return (
+        <div className="overflow-x-hidden">
+{/* Navigation */}
+<nav className={`fixed w-full z-50 transition-all duration-500 ${scrollPosition > 50 ? 'bg-primary bg-opacity-95 py-2 shadow-xl' : 'bg-transparent py-4'}`}>
+  <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+    
+    {/* Logo */}
+    <a href="#" className="text-2xl md:text-xl font-bold text-white flex items-center gap-2">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSpb0pvu_5gYR2auNhwZQ3paSIgGBSdUvoZg&s" alt="Logo" className="rounded-full 2xl:absolute 2xl:left-1 w-10" />
+      <span className=" 2xl:absolute 2xl:left-12 animate__animated animate__fadeIn">ELITE MOTORS</span>
+    </a>
+
+    {/* Desktop Links */}
+    <div className="hidden md:flex 2xl:absolute 2xl:right-12 items-center space-x-3">
+      <a href="#home" className="text-white hover:text-accent transition">Home</a>
+      <a href="#inventory" className="text-white hover:text-accent transition">Inventory</a>
+      <a href="#brands" className="text-white hover:text-accent transition">Brands</a>
+      <a href="#services" className="text-white hover:text-accent transition">Services</a>
+      <a href="#about" className="text-white hover:text-accent transition">About</a>
+      <a href="#contact" className="text-white hover:text-accent transition">Contact</a>
+      <button className="bg-accent text-primary md:p-3 px-6 py-2 rounded-full font-medium hover:bg-yellow-500 transition animate__animated animate__pulse animate__infinite">
+        Book Appointment
+      </button>
+    </div>
+
+    {/* Mobile Toggle */}
+    <div className="md:hidden">
+      <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white focus:outline-none">
+        {isMenuOpen ? (
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        )}
+      </button>
+    </div>
+  </div>
+
+  {/* Mobile Menu */}
+  {isMenuOpen && (
+    <div className="md:hidden bg-primary bg-opacity-95 py-4 px-4 animate__animated animate__fadeInDown">
+      <div className="flex flex-col space-y-4">
+        <a href="#home" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent transition">Home</a>
+        <a href="#inventory" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent transition">Inventory</a>
+        <a href="#brands" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent transition">Brands</a>
+        <a href="#services" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent transition">Services</a>
+        <a href="#about" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent transition">About</a>
+        <a href="#contact" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent transition">Contact</a>
+        <button className="bg-accent text-primary px-6 py-2 rounded-full font-medium hover:bg-yellow-500 transition">
+          Book Appointment
+        </button>
+      </div>
+    </div>
+  )}
+</nav>
+          
+          {/* Hero Section */}
+          <section id="home" className="hero-section h-screen flex items-center pt-16">
+            <div className="container mx-auto px-4">
+              <div className="max-w-2xl animate__animated animate__fadeInUp">
+                <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Experience Automotive Excellence</h1>
+                <p className="text-xl text-gray-300 mb-8">Discover the world's most exclusive luxury vehicles curated for discerning clients.</p>
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                  <button className="bg-accent text-primary px-8 py-3 rounded-full font-medium hover:bg-yellow-500 transition duration-300 animate__animated animate__pulse animate__infinite">
+                    Explore Inventory
+                  </button>
+                  <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-medium hover:bg-white hover:text-primary transition duration-300">
+                    Learn More
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          {/* Featured Vehicles Section */}
+          <section id="inventory" className="py-20 bg-white">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4 animate__animated animate__fadeIn">Our Featured Collection</h2>
+                <div className="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p className="text-gray-600 max-w-2xl mx-auto animate__animated animate__fadeIn">
+                  Curated selection of the world's finest automobiles
+                </p>
+              </div>
+              
+              {/* Category Tabs */}
+              <div className="flex justify-center mb-12 overflow-x-auto">
+                <div className="flex space-x-2 md:space-x-4">
+                  <button 
+                    onClick={() => setActiveTab('all')}
+                    className={`px-4 py-2 rounded-full ${activeTab === 'all' ? 'bg-accent text-primary' : 'bg-gray-200 text-gray-700'} transition duration-300 whitespace-nowrap`}
+                  >
+                    All Vehicles
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('sedan')}
+                    className={`px-4 py-2 rounded-full ${activeTab === 'sedan' ? 'bg-accent text-primary' : 'bg-gray-200 text-gray-700'} transition duration-300 whitespace-nowrap`}
+                  >
+                    Luxury Sedans
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('suv')}
+                    className={`px-4 py-2 rounded-full ${activeTab === 'suv' ? 'bg-accent text-primary' : 'bg-gray-200 text-gray-700'} transition duration-300 whitespace-nowrap`}
+                  >
+                    SUVs
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('sports')}
+                    className={`px-4 py-2 rounded-full ${activeTab === 'sports' ? 'bg-accent text-primary' : 'bg-gray-200 text-gray-700'} transition duration-300 whitespace-nowrap`}
+                  >
+                    Sports Cars
+                  </button>
+                </div>
+              </div>
+              
+              {/* Vehicle Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredCars.map((car, index) => (
+                  <div 
+                    key={car.id}
+                    className="car-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-500 animate__animated animate__fadeIn"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="relative overflow-hidden h-64">
+                      <img 
+                        src={car.image} 
+                        alt={car.name}
+                        className="car-image w-full h-full object-cover transition duration-500"
+                      />
+                      <div className="absolute top-4 right-4 bg-accent text-primary px-3 py-1 rounded-full text-sm font-medium">
+                        Featured
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold text-primary">{car.name}</h3>
+                        <span className="text-accent font-bold">{car.price}</span>
+                      </div>
+                      <p className="text-gray-600 mb-4">{car.description}</p>
+                      <div className="grid grid-cols-3 gap-2 mb-4">
+                        <div className="text-center">
+                          <p className="text-sm text-gray-500">Year</p>
+                          <p className="font-medium">{car.year}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-gray-500">Mileage</p>
+                          <p className="font-medium">{car.mileage} mi</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-gray-500">Power</p>
+                          <p className="font-medium">{car.horsepower}</p>
+                        </div>
+                      </div>
+                      <button className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition duration-300">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="text-center mt-12">
+                <button className="border-2 border-primary text-primary px-8 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition duration-300">
+                  View Full Inventory
+                </button>
+              </div>
+            </div>
+          </section>
+          
+          {/* Brands Showcase */}
+          <section id="brands" className="py-16 bg-gray-100">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Trusted by the Finest Brands</h2>
+                <div className="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  We partner with the world's most prestigious automotive manufacturers
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+                {brands.map((brand, index) => (
+                  <div 
+                    key={brand.name}
+                    className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 animate__animated animate__fadeIn"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <img 
+                      src={brand.logo} 
+                      alt={brand.name}
+                      className="brand-logo h-12 object-contain opacity-70 hover:opacity-100 transition duration-300"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+          
+          {/* Testimonials Section */}
+          <section className="py-20 bg-primary text-white">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
+                <div className="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p className="text-gray-300 max-w-2xl mx-auto">
+                  Hear from our satisfied customers about their Elite Motors experience
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {testimonials.map((testimonial, index) => (
+                  <div 
+                    key={index}
+                    className="testimonial-card bg-secondary p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-500 animate__animated animate__fadeIn"
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
+                    <div className="flex items-center mb-6">
+                      <img 
+                        src={testimonial.image} 
+                        alt={testimonial.name}
+                        className="w-16 h-16 rounded-full object-cover mr-4"
+                      />
+                      <div>
+                        <h4 className="font-bold">{testimonial.name}</h4>
+                        <p className="text-gray-400 text-sm">{testimonial.role}</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-300 italic">"{testimonial.comment}"</p>
+                    <div className="flex mt-4 text-yellow-400">
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+          
+          {/* Services Section */}
+          <section id="services" className="py-20 bg-white">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Our Exclusive Services</h2>
+                <div className="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Beyond just sales - a complete luxury automotive experience
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {services.map((service, index) => (
+                  <div 
+                    key={index}
+                    className="bg-gray-50 p-8 rounded-lg hover:shadow-lg transition duration-300 animate__animated animate__fadeIn"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="text-accent text-4xl mb-4">
+                      <i className={`fas ${service.icon}`}></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-primary mb-2">{service.title}</h3>
+                    <p className="text-gray-600">{service.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+          
+          {/* Latest News Section */}
+          <section className="py-20 bg-gray-100">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Latest News & Updates</h2>
+                <div className="w-20 h-1 bg-accent mx-auto mb-6"></div>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Stay informed about the luxury automotive world
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {news.map((item, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 animate__animated animate__fadeIn"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <img 
+                      src={item.image} 
+                      alt={item.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-6">
+                      <span className="text-sm text-gray-500">{item.date}</span>
+                      <h3 className="text-xl font-bold text-primary my-2">{item.title}</h3>
+                      <p className="text-gray-600 mb-4">{item.excerpt}</p>
+                      <a href="#" className="text-accent font-medium hover:underline">Read More</a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="text-center mt-12">
+                <button className="border-2 border-primary text-primary px-8 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition duration-300">
+                  View All Articles
+                </button>
+              </div>
+            </div>
+          </section>
+          
+          {/* Contact Section */}
+          <section id="contact" className="py-20 bg-primary text-white">
+            <div className="container mx-auto px-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="animate__animated animate__fadeInLeft">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-6">Contact Us</h2>
+                  <p className="text-gray-300 mb-8 max-w-lg">
+                    Ready to begin your luxury automotive journey? Our concierge team is available 24/7 to assist you with any inquiries.
+                  </p>
+                  
+                  <div className="space-y-6">
+                    <div className="flex items-start">
+                      <div className="text-accent text-xl mr-4 mt-1">
+                        <i className="fas fa-map-marker-alt"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-bold mb-1">Our Showroom</h4>
+                        <p className="text-gray-300">123 Luxury Avenue, Beverly Hills, CA 90210</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="text-accent text-xl mr-4 mt-1">
+                        <i className="fas fa-phone-alt"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-bold mb-1">Phone</h4>
+                        <p className="text-gray-300">+1 (310) 555-LUXE</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="text-accent text-xl mr-4 mt-1">
+                        <i className="fas fa-envelope"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-bold mb-1">Email</h4>
+                        <p className="text-gray-300">concierge@elitemotors.com</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="animate__animated animate__fadeInRight">
+                  <div className="bg-secondary p-8 rounded-lg shadow-lg">
+                    <h3 className="text-2xl font-bold mb-6">Send Us a Message</h3>
+                    <form>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label htmlFor="name" className="block text-gray-300 mb-2">Name</label>
+                          <input 
+                            type="text" 
+                            id="name" 
+                            className="w-full bg-primary border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-accent"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="email" className="block text-gray-300 mb-2">Email</label>
+                          <input 
+                            type="email" 
+                            id="email" 
+                            className="w-full bg-primary border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-accent"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <label htmlFor="subject" className="block text-gray-300 mb-2">Subject</label>
+                        <input 
+                          type="text" 
+                          id="subject" 
+                          className="w-full bg-primary border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-accent"
+                        />
+                      </div>
+                      
+                      <div className="mb-6">
+                        <label htmlFor="message" className="block text-gray-300 mb-2">Message</label>
+                        <textarea 
+                          id="message" 
+                          rows="4"
+                          className="w-full bg-primary border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-accent"
+                        ></textarea>
+                      </div>
+                      
+                      <button type="submit" className="w-full bg-accent text-primary py-3 rounded-lg font-medium hover:bg-yellow-500 transition duration-300">
+                        Send Message
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          {/* Footer */}
+          <footer className="bg-secondary text-white py-12">
+            <div className="container mx-auto px-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                  <h3 className="text-xl font-bold mb-4 flex items-center">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSpb0pvu_5gYR2auNhwZQ3paSIgGBSdUvoZg&s" className="rounded-full w-10"/>
+                  
+                    ELITE MOTORS
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    The premier destination for luxury automotive excellence since 2005.
+                  </p>
+                  <div className="flex space-x-4">
+                    <a href="#" className="text-gray-400 hover:text-white transition duration-300">
+                      <i className="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-white transition duration-300">
+                      <i className="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-white transition duration-300">
+                      <i className="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-white transition duration-300">
+                      <i className="fab fa-linkedin-in"></i>
+                    </a>
+                  </div>
+                </div>
+                                <div>
+                  <h4 className="text-lg font-bold mb-4">Our Services</h4>
+                  <ul className="space-y-2">
+                    <li><a href="#" className="text-gray-400 hover:text-white transition duration-300">Luxury Vehicle Sales</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-white transition duration-300">Vehicle Trade-In</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-white transition duration-300">Financing Options</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-white transition duration-300">Extended Warranties</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-white transition duration-300">Customization</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-white transition duration-300">Maintenance Packages</a></li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-bold mb-4">Contact Info</h4>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <i className="fas fa-map-marker-alt text-accent mt-1 mr-3"></i>
+                      <span className="text-gray-400">123 Luxury Avenue<br/>Beverly Hills, CA 90210</span>
+                    </li>
+                    <li className="flex items-center">
+                      <i className="fas fa-phone-alt text-accent mr-3"></i>
+                      <span className="text-gray-400">+1 (310) 555-LUXE</span>
+                    </li>
+                    <li className="flex items-center">
+                      <i className="fas fa-envelope text-accent mr-3"></i>
+                      <span className="text-gray-400">concierge@elitemotors.com</span>
+                    </li>
+                    <li className="flex items-center">
+                      <i className="fas fa-clock text-accent mr-3"></i>
+                      <span className="text-gray-400">Mon-Fri: 9AM - 7PM<br/>Sat: 10AM - 5PM</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="border-t border-gray-700 mt-12 pt-8">
+                <div className="flex flex-col md:flex-row justify-between items-center">
+                  <p className="text-gray-500 text-sm mb-4 md:mb-0">
+                    &copy; {new Date().getFullYear()} Elite Motors. All rights reserved.
+                  </p>
+                  <div className="flex space-x-6">
+                    <a href="#" className="text-gray-500 hover:text-white transition duration-300 text-sm">Privacy Policy</a>
+                    <a href="#" className="text-gray-500 hover:text-white transition duration-300 text-sm">Terms of Service</a>
+                    <a href="#" className="text-gray-500 hover:text-white transition duration-300 text-sm">Cookie Policy</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </footer>
+          
+          {/* Back to Top Button */}
+          {scrollPosition > 300 && (
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="fixed bottom-6 right-6 bg-accent text-primary w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-yellow-500 transition duration-300 z-40 animate__animated animate__fadeIn"
+            >
+              <i className="fas fa-arrow-up"></i>
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
+               
